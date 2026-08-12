@@ -1,0 +1,13 @@
+# --- secrets: NEVER commit these ---
+credentials.json
+*.pem
+.env
+
+# generated CSVs
+web_output/
+
+# python cruft
+__pycache__/
+*.pyc
+.venv/
+venv/

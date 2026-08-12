@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Techno Communications — Compliance Data</title>
+<meta name="theme-color" content="#E20074">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" href="/static/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --magenta:#E20074;--magenta-600:#C70068;--magenta-700:#A4005A;
+    --magenta-tint:#FFEAF4;--magenta-tint-2:#FFF5FA;--magenta-glow:rgba(226,0,116,.26);
+    --ink:#1B1118;--ink-soft:#473B43;--muted:#6E5F68;--faint:#9A8B93;
+    --bg:#FBF7FA;--surface:rgba(255,255,255,.72);--surface-solid:#fff;
+    --line:rgba(27,17,24,.09);--line-magenta:rgba(226,0,116,.16);
+    --ok:#127a49;--ok-bg:#e8f7ee;--warn:#9a6a06;--warn-bg:#fdf3df;
+    --err:#c0264a;--err-bg:#fdecef;
+    --r-xl:26px;--r-lg:20px;--r-md:14px;--r-sm:11px;--pill:999px;
+    --sh-sm:0 1px 2px rgba(27,17,24,.05),0 2px 8px rgba(27,17,24,.04);
+    --sh-md:0 4px 10px rgba(27,17,24,.05),0 14px 34px rgba(27,17,24,.07);
+    --sh-lg:0 10px 24px rgba(27,17,24,.07),0 30px 70px rgba(27,17,24,.10);
+    --sh-magenta:0 10px 26px var(--magenta-glow);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  ::selection{background:var(--magenta);color:#fff}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:var(--ink);
+    background:var(--bg);min-height:100vh;line-height:1.5;-webkit-font-smoothing:antialiased;
+    background-image:
+      radial-gradient(900px 540px at 92% -8%,var(--magenta-tint),transparent 62%),
+      radial-gradient(760px 480px at -8% 108%,#FFF0F8,transparent 58%);
+    background-attachment:fixed;
+  }
+  .wrap{max-width:860px;margin:0 auto;padding:0 clamp(18px,5vw,40px) 80px}
+  :focus-visible{outline:2.5px solid var(--magenta);outline-offset:3px;border-radius:6px}
+
+  /* header */
+  header{position:sticky;top:0;z-index:30;
+    background:rgba(251,247,250,.72);backdrop-filter:blur(18px) saturate(1.4);
+    -webkit-backdrop-filter:blur(18px) saturate(1.4);border-bottom:1px solid var(--line)}
+  header .inner{max-width:860px;margin:0 auto;display:flex;align-items:center;
+    gap:14px;padding:15px clamp(18px,5vw,40px)}
+  .brandlogo{height:42px;width:auto;object-fit:contain;flex:none}
+  .brand .txt b{font-family:'Sora';font-weight:700;font-size:17px;letter-spacing:-.2px;display:block;line-height:1.15}
+  .brand .txt span{display:block;font-size:10px;color:var(--muted);letter-spacing:1.8px;text-transform:uppercase;font-weight:600;margin-top:2px}
+
+  /* hero */
+  .hero{padding:52px 0 6px;animation:fadeUp .5s both}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.4px;
+    color:var(--magenta-700);background:var(--magenta-tint);border:1px solid var(--line-magenta);
+    padding:7px 15px;border-radius:var(--pill);margin-bottom:18px}
+  .eyebrow .d{width:7px;height:7px;border-radius:50%;background:var(--magenta)}
+  h1{font-family:'Sora';font-weight:800;font-size:clamp(30px,5vw,46px);letter-spacing:-1.4px;line-height:1.05;margin-bottom:14px}
+  h1 .accent{color:var(--magenta)}
+  .lead{color:var(--muted);font-weight:400;max-width:56ch;line-height:1.65;font-size:clamp(15px,1.7vw,16.5px)}
+
+  /* card */
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);
+    padding:30px clamp(20px,3vw,34px);margin-top:30px;backdrop-filter:blur(10px);
+    box-shadow:var(--sh-md);animation:fadeUp .55s cubic-bezier(.2,.8,.3,1) both}
+  .card-title{font-family:'Sora';font-weight:700;font-size:13px;letter-spacing:.4px;text-transform:uppercase;
+    color:var(--magenta-700);margin-bottom:6px;display:flex;align-items:center;gap:12px}
+  .step{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:9px;
+    background:linear-gradient(150deg,var(--magenta),var(--magenta-700));color:#fff;
+    font-family:'Sora';font-weight:700;font-size:13px;flex:none;box-shadow:var(--sh-magenta)}
+  .desc{font-size:14px;color:var(--muted);margin-bottom:24px;line-height:1.6}
+
+  /* form grid */
+  .form-grid{display:grid;grid-template-columns:1fr;gap:18px;margin-bottom:24px}
+  .field{display:flex;flex-direction:column;gap:7px}
+  .field label{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.7px;text-transform:uppercase;padding-left:2px}
+  select,input[type=date]{font-family:'Plus Jakarta Sans';font-size:14.5px;font-weight:500;padding:12px 15px;
+    border:1.5px solid var(--line);border-radius:var(--r-sm);color:var(--ink);background:var(--surface-solid);width:100%}
+  select:focus,input[type=date]:focus{outline:none;border-color:var(--magenta);box-shadow:0 0 0 4px var(--magenta-tint)}
+  select:disabled{opacity:.6;cursor:not-allowed}
+  .dates{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media (min-width:620px){.form-grid{grid-template-columns:1fr}}
+
+  /* button */
+  .btn{font-family:'Plus Jakarta Sans';font-weight:600;font-size:15px;padding:14px 28px;border-radius:var(--pill);
+    border:none;cursor:pointer;transition:transform .2s,box-shadow .25s,background .2s;
+    display:inline-flex;align-items:center;gap:10px;line-height:1}
+  .btn-primary{background:linear-gradient(150deg,var(--magenta),var(--magenta-700));color:#fff;box-shadow:var(--sh-magenta)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 16px 36px var(--magenta-glow)}
+  .btn-primary:active{transform:translateY(0)}
+  .btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important;box-shadow:none}
+
+  /* banner */
+  .banner{padding:14px 18px;border-radius:var(--r-md);font-size:14px;font-weight:500;margin-top:18px;
+    display:none;border:1px solid transparent;align-items:center;gap:10px}
+  .banner.show{display:flex;animation:slideDown .35s cubic-bezier(.2,.9,.3,1.2)}
+  .banner.err{background:var(--err-bg);color:var(--err);border-color:rgba(192,38,74,.2)}
+  .banner.warn{background:var(--warn-bg);color:var(--warn);border-color:rgba(154,106,6,.18)}
+
+  /* run panel */
+  .runpanel{display:none;border:1px solid var(--line-magenta);
+    background:linear-gradient(135deg,rgba(255,255,255,.85),var(--magenta-tint));
+    border-radius:var(--r-lg);padding:20px 22px;margin-top:22px;box-shadow:var(--sh-md)}
+  .runpanel.on{display:block;animation:slideDown .35s cubic-bezier(.2,.9,.3,1.15)}
+  .rp-top{display:flex;align-items:center;gap:14px}
+  .spin-m{width:24px;height:24px;border:3px solid var(--magenta-tint);border-top-color:var(--magenta);
+    border-radius:50%;animation:sp .8s linear infinite;flex:none}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  .rp-text{flex:1;min-width:0}
+  .rp-text b{display:block;font-family:'Sora';font-weight:600;font-size:14.5px}
+  .rp-text small{color:var(--muted);font-size:12.5px;font-variant-numeric:tabular-nums}
+  .progress{height:8px;border-radius:99px;background:rgba(226,0,116,.14);margin-top:14px;overflow:hidden}
+  .progress .fill{height:100%;border-radius:99px;width:0%;transition:width .4s ease;
+    background:linear-gradient(90deg,var(--magenta),var(--magenta-700))}
+
+  /* result */
+  .result{display:none;border:1px solid rgba(18,122,73,.24);background:var(--ok-bg);
+    border-radius:var(--r-lg);padding:22px 24px;margin-top:22px;box-shadow:var(--sh-sm)}
+  .result.on{display:block;animation:slideDown .4s cubic-bezier(.2,.9,.3,1.15)}
+  .result .rtitle{font-family:'Sora';font-weight:700;font-size:16px;color:var(--ok);display:flex;align-items:center;gap:10px;margin-bottom:6px}
+  .result .rtitle .tick{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;
+    background:var(--ok);color:#fff;font-size:13px;font-weight:800;animation:checkPop .45s cubic-bezier(.2,.9,.3,1.4)}
+  .result .stats{font-size:13.5px;color:var(--ink-soft);font-family:'JetBrains Mono';margin:10px 0 18px;line-height:1.7}
+  .result .stats span{color:var(--magenta-700);font-weight:600}
+  .dlbtn{display:inline-flex;align-items:center;gap:10px;text-decoration:none;
+    font-family:'Plus Jakarta Sans';font-weight:600;font-size:14.5px;padding:13px 26px;border-radius:var(--pill);
+    background:linear-gradient(150deg,var(--magenta),var(--magenta-700));color:#fff;box-shadow:var(--sh-magenta);
+    transition:transform .2s,box-shadow .25s}
+  .dlbtn:hover{transform:translateY(-2px);box-shadow:0 16px 36px var(--magenta-glow)}
+
+  footer{text-align:center;color:var(--muted);font-size:12.5px;margin-top:46px;display:flex;
+    align-items:center;justify-content:center;gap:8px}
+  footer .fdot{width:5px;height:5px;border-radius:50%;background:var(--magenta);opacity:.5}
+
+  @keyframes fadeUp{from{transform:translateY(14px);opacity:0}to{transform:none;opacity:1}}
+  @keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
+  @keyframes checkPop{0%{transform:scale(0) rotate(-30deg)}70%{transform:scale(1.25)}100%{transform:scale(1)}}
+  @media (prefers-reduced-motion: reduce){*{animation-duration:.001s!important;transition-duration:.001s!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="inner">
+    <img class="brandlogo" src="/static/logo.png" alt="Techno Communications">
+    <div class="brand">
+      <div class="txt"><b>Compliance Data</b><span>Techno Communications LLC</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <section class="hero">
+    <span class="eyebrow"><span class="d"></span>Schedule &amp; attendance export</span>
+    <h1>Pull <span class="accent">compliance data</span><br>and download a CSV.</h1>
+    <p class="lead">Choose a single market or all markets, set a date range, and get one clean
+      compliance CSV pulled straight from the source schedule sheets.</p>
+  </section>
+
+  <div class="card">
+    <div class="card-title"><span class="step">1</span> Choose what to pull</div>
+    <p class="desc">Pick a market (or <b>All Markets</b>), then the week/date range you need.</p>
+
+    <div class="form-grid">
+      <div class="field">
+        <label for="market">Market</label>
+        <select id="market">
+          <option value="ALL">🌐 All Markets</option>
+          <optgroup label="Individual markets">
+            {% for m in markets %}<option value="{{ m }}">{{ m }}</option>{% endfor %}
+          </optgroup>
+        </select>
+      </div>
+      <div class="dates">
+        <div class="field">
+          <label for="from">From date</label>
+          <input type="date" id="from" value="{{ default_from }}">
+        </div>
+        <div class="field">
+          <label for="to">To date</label>
+          <input type="date" id="to" value="{{ default_to }}">
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" id="btnRun">
+      <span id="btnLabel">Get Compliance Data</span>
+    </button>
+
+    <!-- error / warning banner -->
+    <div class="banner err" id="banner"></div>
+
+    <!-- live progress -->
+    <div class="runpanel" id="runpanel">
+      <div class="rp-top">
+        <div class="spin-m"></div>
+        <div class="rp-text">
+          <b id="rpTitle">Pulling sheets…</b>
+          <small id="rpSub">Starting…</small>
+        </div>
+      </div>
+      <div class="progress"><div class="fill" id="rpFill"></div></div>
+    </div>
+
+    <!-- result -->
+    <div class="result" id="result">
+      <div class="rtitle"><span class="tick">✓</span> Compliance data ready</div>
+      <div class="stats" id="rStats"></div>
+      <a class="dlbtn" id="dlbtn" href="/api/download">⬇ Download CSV</a>
+    </div>
+  </div>
+
+  <footer><span class="fdot"></span> Techno Communications LLC · Compliance Data Export</footer>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+const btn    = $('#btnRun');
+const label  = $('#btnLabel');
+const banner = $('#banner');
+const panel  = $('#runpanel');
+const fill   = $('#rpFill');
+const rpTitle= $('#rpTitle');
+const rpSub  = $('#rpSub');
+const result = $('#result');
+const rStats = $('#rStats');
+
+let pollTimer = null;
+let startTs   = 0;
+
+function showBanner(msg, kind='err'){
+  banner.className = 'banner ' + kind + ' show';
+  banner.textContent = msg;
+}
+function clearBanner(){ banner.className = 'banner err'; }
+
+function fmtElapsed(){
+  const s = Math.floor((Date.now() - startTs)/1000);
+  const m = Math.floor(s/60);
+  return m > 0 ? `${m}m ${s%60}s` : `${s}s`;
+}
+
+async function startRun(){
+  clearBanner();
+  result.classList.remove('on');
+
+  const market = $('#market').value;
+  const from   = $('#from').value;
+  const to     = $('#to').value;
+
+  if(!from || !to){ showBanner('Please choose both From and To dates.'); return; }
+  if(to < from){ showBanner("'To' date must be on or after the 'From' date."); return; }
+
+  btn.disabled = true;
+  label.innerHTML = 'Working…';
+  panel.classList.add('on');
+  fill.style.width = '0%';
+  rpTitle.textContent = 'Pulling sheets…';
+  rpSub.textContent = 'Starting…';
+  startTs = Date.now();
+
+  try{
+    const r = await fetch('/api/generate', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ market, from, to })
+    });
+    const j = await r.json();
+    if(!r.ok){ throw new Error(j.error || 'Could not start the pull.'); }
+    pollTimer = setInterval(pollStatus, 900);
+  }catch(e){
+    stopRun();
+    showBanner(e.message);
+  }
+}
+
+async function pollStatus(){
+  let j;
+  try{ j = await (await fetch('/api/status')).json(); }
+  catch(e){ return; }
+
+  if(j.pct != null) fill.style.width = j.pct + '%';
+  if(j.message){ rpSub.textContent = j.message + '  ·  ' + fmtElapsed(); }
+
+  if(j.state === 'done'){
+    clearInterval(pollTimer); pollTimer = null;
+    fill.style.width = '100%';
+    setTimeout(()=>panel.classList.remove('on'), 500);
+    stopRun(false);
+    const res = j.result || {};
+    const mk  = Array.isArray(res.markets)
+      ? (res.markets.length > 3 ? res.markets.length + ' markets' : res.markets.join(', '))
+      : '';
+    rStats.innerHTML =
+      `Markets: <span>${mk}</span><br>`+
+      `Sheets pulled: <span>${res.sheets ?? 0}</span> · Rows: <span>${(res.rows ?? 0).toLocaleString()}</span><br>`+
+      `File: <span>${res.filename ?? ''}</span>`;
+    result.classList.add('on');
+    result.scrollIntoView({behavior:'smooth', block:'nearest'});
+  }
+  else if(j.state === 'error'){
+    clearInterval(pollTimer); pollTimer = null;
+    panel.classList.remove('on');
+    stopRun(false);
+    showBanner(j.error || j.message || 'Something went wrong during the pull.');
+  }
+}
+
+function stopRun(hidePanel=true){
+  btn.disabled = false;
+  label.textContent = 'Get Compliance Data';
+  if(hidePanel) panel.classList.remove('on');
+}
+
+btn.addEventListener('click', startRun);
+</script>
+</body>
+</html>

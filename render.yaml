@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: techno-compliance
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn web_app:app --workers 1 --threads 8 --timeout 120 --bind 0.0.0.0:$PORT
+    envVars:
+      # Set the value in the Render dashboard (kept out of git).
+      - key: APP_PASSWORD
+        sync: false
