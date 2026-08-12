@@ -38,6 +38,9 @@
   }
   .wrap{max-width:860px;margin:0 auto;padding:0 clamp(18px,5vw,40px) 80px}
   :focus-visible{outline:2.5px solid var(--magenta);outline-offset:3px;border-radius:6px}
+  .auth-screen{position:fixed;inset:0;z-index:20;display:grid;place-items:center;padding:20px;background:var(--bg);background-image:radial-gradient(900px 540px at 92% -8%,var(--magenta-tint),transparent 62%),radial-gradient(760px 480px at -8% 108%,#FFF0F8,transparent 58%)}
+  .auth-screen.hidden{display:none}.auth-card{width:min(100%,410px);padding:34px;background:#fff;border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--sh-lg)}
+  .auth-logo{width:58px;height:58px;object-fit:contain;margin-bottom:22px}.auth-card h1{font-family:'Sora';font-size:26px;line-height:1.2;margin:4px 0 8px}.auth-help{color:var(--muted);font-size:13px;margin-bottom:22px}.auth-card label{display:block;color:var(--ink-soft);font-size:12px;font-weight:700;margin:14px 0 6px}.auth-card input{width:100%;padding:12px;border:1px solid var(--line);border-radius:var(--r-sm);font:inherit;color:var(--ink);outline:0}.auth-card input:focus{border-color:var(--magenta);box-shadow:0 0 0 3px var(--magenta-tint)}.password-wrap{position:relative}.password-wrap input{padding-right:46px}.toggle-password{position:absolute;right:8px;bottom:7px;width:34px;height:34px;border:0;border-radius:8px;background:transparent;color:var(--muted);cursor:pointer;font-size:18px}.toggle-password:hover{background:var(--magenta-tint);color:var(--magenta)}.auth-submit{width:100%;margin-top:18px}.login-error{min-height:20px;color:var(--err);font-size:12px;margin-top:10px}
 
   /* header */
   header{position:sticky;top:0;z-index:30;
@@ -139,6 +142,26 @@
 </style>
 </head>
 <body>
+
+<section class="auth-screen" id="authScreen">
+  <div class="auth-card">
+    <img class="auth-logo" src="/static/logo.png" alt="Techno Communications">
+    <span class="eyebrow">SECURE ACCESS</span>
+    <h1>Sign in to Compliance Data</h1>
+    <p class="auth-help">Use your Techno Communications account to continue.</p>
+    <form id="loginForm">
+      <label for="loginEmail">Email</label>
+      <input id="loginEmail" type="email" autocomplete="username" required placeholder="you@company.com">
+      <label for="loginPassword">Password</label>
+      <div class="password-wrap">
+        <input id="loginPassword" type="password" autocomplete="current-password" required>
+        <button class="toggle-password" type="button" id="togglePassword" aria-label="Show password" title="Show password">&#128065;</button>
+      </div>
+      <button class="btn btn-primary auth-submit" type="submit" id="loginButton">Sign in</button>
+      <p class="login-error" id="loginError" role="alert"></p>
+    </form>
+  </div>
+</section>
 
 <header>
   <div class="inner">
@@ -313,6 +336,48 @@ function stopRun(hidePanel=true){
 }
 
 btn.addEventListener('click', startRun);
+
+const authScreen = $('#authScreen');
+const loginForm = $('#loginForm');
+const loginButton = $('#loginButton');
+const loginError = $('#loginError');
+const passwordInput = $('#loginPassword');
+const togglePassword = $('#togglePassword');
+
+togglePassword.addEventListener('click', () => {
+  const visible = passwordInput.type === 'text';
+  passwordInput.type = visible ? 'password' : 'text';
+  togglePassword.innerHTML = visible ? '&#128065;' : '&#128064;';
+  togglePassword.setAttribute('aria-label', visible ? 'Show password' : 'Hide password');
+  togglePassword.title = visible ? 'Show password' : 'Hide password';
+});
+
+if(localStorage.getItem('complianceToken')) authScreen.classList.add('hidden');
+
+loginForm.addEventListener('submit', async event => {
+  event.preventDefault();
+  loginError.textContent = '';
+  loginButton.disabled = true;
+  try {
+    const response = await fetch('/api/login', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        email: $('#loginEmail').value,
+        password: $('#loginPassword').value
+      })
+    });
+    const data = await response.json();
+    if(!response.ok) throw new Error(data.error || 'Login failed.');
+    localStorage.setItem('complianceToken', data.token);
+    localStorage.setItem('complianceUser', JSON.stringify(data));
+    authScreen.classList.add('hidden');
+  } catch(error) {
+    loginError.textContent = error.message;
+  } finally {
+    loginButton.disabled = false;
+  }
+});
 </script>
 </body>
 </html>

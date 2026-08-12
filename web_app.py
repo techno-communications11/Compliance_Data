@@ -22,6 +22,10 @@ from datetime import date, datetime, timedelta
 
 from flask import (Flask, render_template, jsonify, request,
                    send_file, abort, Response)
+from urllib.parse import urlencode
+from urllib.request import urlopen
+from urllib.error import HTTPError
+import json
 
 import compliance_core as core
 
@@ -99,6 +103,31 @@ def index():
 @app.route("/api/markets")
 def api_markets():
     return jsonify({"markets": core.ALL_MARKET_NAMES})
+
+
+@app.route("/api/login", methods=["POST"])
+def api_login():
+    data = request.get_json(silent=True) or {}
+    email = (data.get("email") or "").strip()
+    password = data.get("password") or ""
+    if not email or not password:
+        return jsonify({"error": "Email and password are required."}), 400
+    try:
+        query = urlencode({"email": email, "password": password})
+        with urlopen(
+            f"http://technocomm-dev.us-west-2.elasticbeanstalk.com/Login?{query}",
+            timeout=20,
+        ) as upstream:
+            result = json.load(upstream)
+    except HTTPError as error:
+        if error.code in (401, 403):
+            return jsonify({"error": "Invalid email or password."}), 401
+        return jsonify({"error": "Login service is unavailable."}), 502
+    except Exception:
+        return jsonify({"error": "Login service is unavailable."}), 502
+    if not isinstance(result, list) or len(result) < 3:
+        return jsonify({"error": "Invalid email or password."}), 401
+    return jsonify({"name": result[0], "email": result[1], "token": result[2]})
 
 
 @app.route("/api/generate", methods=["POST"])
