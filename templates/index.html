@@ -46,11 +46,15 @@
   header{position:sticky;top:0;z-index:30;
     background:rgba(251,247,250,.72);backdrop-filter:blur(18px) saturate(1.4);
     -webkit-backdrop-filter:blur(18px) saturate(1.4);border-bottom:1px solid var(--line)}
+  header.hidden{display:none}
   header .inner{max-width:860px;margin:0 auto;display:flex;align-items:center;
     gap:14px;padding:15px clamp(18px,5vw,40px)}
   .brandlogo{height:42px;width:auto;object-fit:contain;flex:none}
   .brand .txt b{font-family:'Sora';font-weight:700;font-size:17px;letter-spacing:-.2px;display:block;line-height:1.15}
   .brand .txt span{display:block;font-size:10px;color:var(--muted);letter-spacing:1.8px;text-transform:uppercase;font-weight:600;margin-top:2px}
+  .header-actions{margin-left:auto}
+  .logout-btn{font-size:12px;padding:10px 16px;color:var(--ink-soft);background:var(--surface-solid);border:1px solid var(--line)}
+  .logout-btn:hover{color:var(--magenta-700);border-color:var(--line-magenta);background:var(--magenta-tint)}
 
   /* hero */
   .hero{padding:52px 0 6px;animation:fadeUp .5s both}
@@ -163,11 +167,14 @@
   </div>
 </section>
 
-<header>
+<header id="appHeader" class="hidden">
   <div class="inner">
     <img class="brandlogo" src="/static/logo.png" alt="Techno Communications">
     <div class="brand">
       <div class="txt"><b>Compliance Data</b><span>Techno Communications LLC</span></div>
+    </div>
+    <div class="header-actions">
+      <button class="btn logout-btn" type="button" id="logoutButton">Log out</button>
     </div>
   </div>
 </header>
@@ -343,6 +350,8 @@ const loginButton = $('#loginButton');
 const loginError = $('#loginError');
 const passwordInput = $('#loginPassword');
 const togglePassword = $('#togglePassword');
+const logoutButton = $('#logoutButton');
+const appHeader = $('#appHeader');
 
 togglePassword.addEventListener('click', () => {
   const visible = passwordInput.type === 'text';
@@ -352,7 +361,20 @@ togglePassword.addEventListener('click', () => {
   togglePassword.title = visible ? 'Show password' : 'Hide password';
 });
 
-if(localStorage.getItem('complianceToken')) authScreen.classList.add('hidden');
+if(localStorage.getItem('complianceToken')) {
+  authScreen.classList.add('hidden');
+  appHeader.classList.remove('hidden');
+}
+
+logoutButton.addEventListener('click', () => {
+  localStorage.removeItem('complianceToken');
+  localStorage.removeItem('complianceUser');
+  authScreen.classList.remove('hidden');
+  appHeader.classList.add('hidden');
+  loginForm.reset();
+  loginError.textContent = '';
+  passwordInput.focus();
+});
 
 loginForm.addEventListener('submit', async event => {
   event.preventDefault();
@@ -372,6 +394,7 @@ loginForm.addEventListener('submit', async event => {
     localStorage.setItem('complianceToken', data.token);
     localStorage.setItem('complianceUser', JSON.stringify(data));
     authScreen.classList.add('hidden');
+    appHeader.classList.remove('hidden');
   } catch(error) {
     loginError.textContent = error.message;
   } finally {
